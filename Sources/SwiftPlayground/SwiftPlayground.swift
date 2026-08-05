@@ -7,8 +7,10 @@ struct SwiftPlayground {
         var pointCount = 0
 
         let questionList = [
-            "What is the formula for finding the distance between two points",
-            "What is the formula for finding the gradient between two points",
+            "What is the formula for finding the distance between two points?",
+            "What is the formula for finding the gradient between two points?",
+            "What is the formula for finding the midpoint between two points?",
+
             "How do you find the negative reciprocal of a gradient?",
 
             "What is the Centroid?",
@@ -16,7 +18,12 @@ struct SwiftPlayground {
             "What is the Orthocentre?"
         ]
         let answerList = [
-            
+            "(x2-x1, y2-y1)"
+            "(y2-y1)/(x2-x1)"
+            "(x1+x2, y1+y2)/2"
+
+            "(a/b -> -a/b or a/-b)"
+
             "Tri-intersection point of a triangle based on lines from midpoints to directly opposite vertexes",
             "Tri-intersection point of a triangle based on lines from straight perpendicular bisector midpoints",
             "Tri-intersection point of a triangle based on lines from straight perpendicular bisectors to directly opposite vertexes"
