@@ -12,9 +12,9 @@ struct SwiftPlayground {
             "What is the Orthocentre?"
         ]
         let answerList = [
-            "Tri-intersection point of a triangle based on lines from directly opposite midpoints to vertexes",
-            "Tri-intersection point of a triangle based on lines from directly opposite midpoints to vertexes",
-            "Tri-intersection point of a triangle based on lines from directly opposite midpoints to vertexes"
+            "Tri-intersection point of a triangle based on lines from midpoints to directly opposite vertexes",
+            "Tri-intersection point of a triangle based on lines from straight perpendicular bisector midpoints",
+            "Tri-intersection point of a triangle based on lines from straight perpendicular bisectors to directly opposite vertexes",
         ]
     }
 }
