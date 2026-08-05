@@ -12,7 +12,7 @@ struct SwiftPlayground {
             "What is the Orthocentre?"
         ]
         let answerList = [
-            []
+            ["Tri-intersection point of a triangle based on lines from vertexes to directly opposite midpoints"]
         ]
     }
 }
