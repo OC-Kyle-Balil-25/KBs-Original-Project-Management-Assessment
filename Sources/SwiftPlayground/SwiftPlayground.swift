@@ -6,7 +6,7 @@ struct SwiftPlayground {
     static func main() {
         var pointCount = 0
 
-        let questionList = [
+        var questionList = [
             "What is the formula for finding the distance between two points?",
             "What is the formula for finding the gradient between two points?",
             "What is the formula for finding the midpoint between two points?",
@@ -18,7 +18,7 @@ struct SwiftPlayground {
             "What is the Circumcentre?",
             "What is the Orthocentre?"
         ]
-        let answerList = [
+        var answerList = [
             "(x2-x1, y2-y1)",
             "(y2-y1)/(x2-x1)",
             "(x1+x2, y1+y2)/2",
@@ -30,5 +30,7 @@ struct SwiftPlayground {
             "Tri-intersection point of a triangle based on lines from straight perpendicular bisector midpoints",
             "Tri-intersection point of a triangle based on lines from straight perpendicular bisectors to directly opposite vertexes",
         ]
+
+        questionList.shuffle()
     }
 }
