@@ -19,6 +19,7 @@ struct SwiftPlayground {
             "What is the Orthocentre?"
         ]
         var questionListRandom = questionList
+        var question = 0
 
         var answerList = [
             "(x2-x1, y2-y1)",
@@ -33,9 +34,9 @@ struct SwiftPlayground {
             "Tri-intersection point of a triangle based on lines from straight perpendicular bisectors to directly opposite vertexes",
         ]
 
-        questionList.shuffle()
-        for question in questionList {
-            if question = questionList
+        questionListRandom.shuffle()
+        for question in questionListRandom {
+            if question = questionList[1]
         }
     }
 }
