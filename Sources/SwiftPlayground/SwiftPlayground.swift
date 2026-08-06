@@ -18,7 +18,7 @@ struct SwiftPlayground {
             "What is the Circumcentre?",
             "What is the Orthocentre?"
         ]
-        var questionListRandom
+        var questionListRandom = questionList
 
         var answerList = [
             "(x2-x1, y2-y1)",
