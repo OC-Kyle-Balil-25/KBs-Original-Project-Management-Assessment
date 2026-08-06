@@ -19,7 +19,7 @@ struct SwiftPlayground {
             "What is the Orthocentre?"
         ]
         var questionListRandom = questionList
-        var question = 0
+        var question = ""
 
         var answerList = [
             "(x2-x1, y2-y1)",
