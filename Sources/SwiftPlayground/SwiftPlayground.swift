@@ -18,6 +18,8 @@ struct SwiftPlayground {
             "What is the Circumcentre?",
             "What is the Orthocentre?"
         ]
+        var questionListRandom
+
         var answerList = [
             "(x2-x1, y2-y1)",
             "(y2-y1)/(x2-x1)",
@@ -32,5 +34,8 @@ struct SwiftPlayground {
         ]
 
         questionList.shuffle()
+        for question in questionList {
+            if question = questionList
+        }
     }
 }
