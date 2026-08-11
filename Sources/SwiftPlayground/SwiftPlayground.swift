@@ -31,14 +31,29 @@ struct SwiftPlayground {
             "Tri-intersection point of a triangle based on lines from perpendicular bisectors to directly opposite vertices",
         ]
 
+        /*
+        Provides a list of three cateredly order-randomized answers.
+        */
+        func randomizeAnswers() {
+            answerRange.shuffle()
+            for lastAnswer in 0..<2 {
+            answerRange.remove(at:3)
+            }
+            print (answerRange)
+        }
+        
+        var answerRange = ["1","2","3"]
         questionListRandom.shuffle()
         for questionConst in questionListRandom {
             // Converts the question string from a constant to a variable
             var questionVar = questionConst
-            if questionVar == questionList[0] || questionVar == questionList[1] || questionVar == questionList[2] || questionVar == questionList[3] || questionVar == questionList[4] {
-                print ("Formulae: \(questionVar)")
+            // Randomizes the order from one of two fixed sets of answers (limited down to 3) based on the question provided
+            if questionVar == questionList[5] || questionVar == questionList[6] || questionVar == questionList[7] {
+                var answerRange = Array(answerList[0...4])
+                randomizeAnswers()
             } else {
-                print ("Triangular Center: \(questionVar)")
+                var answerRange = Array(answerList[5...7])
+                randomizeAnswers()
             }
         }
     }
