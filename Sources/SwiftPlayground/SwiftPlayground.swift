@@ -37,29 +37,31 @@ var loopScroller = 0
 /*
 Provides a list of three cateredly order-randomized answers.
 */
-func randomizeAnswers() {
-    answerRange.shuffle()
-    var randomAnswers: [String] = ["","",""]
-    for randomAnswer in 0..<2 {
-    randomAnswers[loopScroller] = answerRange.randomElement()!
-    loopScroller += 1
-    }
-    print (randomAnswers)
-}
+// func randomizeAnswers() {
+//     answerRange.shuffle()
+//     var randomAnswers: [String] = ["","",""]
+//     for randomAnswer in 0..<2 {
+//     randomAnswers[loopScroller] = answerRange.randomElement()!
+//     loopScroller += 1
+//     }
+//     print (randomAnswers)
+// }
 
-var answerRange = ["1","2","3"]
-questionListRandom.shuffle()
-for questionConst in questionListRandom {
-    // Converts the question string from a constant to a variable
-    var questionVar = questionConst
-    // Randomizes the order from one of two fixed sets of answers (limited down to 3) based on the question provided
-    if questionVar == questionList[5] || questionVar == questionList[6] || questionVar == questionList[7] {
-        var answerRange = Array(answerList[0...4])
-        randomizeAnswers()
-    } else {
-        var answerRange = Array(answerList[5...7])
-        randomizeAnswers()
-    }
-}
+// var answerRange = ["1","2","3"]
+// questionListRandom.shuffle()
+// for questionConst in questionListRandom {
+//     // Converts the question string from a constant to a variable
+//     var questionVar = questionConst
+//     // Randomizes the order from one of two fixed sets of answers (limited down to 3) based on the question provided
+//     if questionVar == questionList[5] || questionVar == questionList[6] || questionVar == questionList[7] {
+//         var answerRange = Array(answerList[0...4])
+//         randomizeAnswers()
+//     } else {
+//         var answerRange = Array(answerList[5...7])
+//         randomizeAnswers()
+//     }
+// }
+// var xpMultiplier = stride(from: 0.25, through: 3, by: 0.25).randomElement()
+// print (xpMultiplier)
                 }
         }
