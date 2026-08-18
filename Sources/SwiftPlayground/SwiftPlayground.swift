@@ -24,7 +24,7 @@ var questionList = [
     "What is the Orthocentre?"
 ]
 /// Copy of questionList, but shuffled
-var questionListRandom = questionList.shuffle()
+var questionListRandom = questionList.shuffled()
 
 /// Fixed list of answers
 var answerList = [
@@ -42,41 +42,43 @@ var answerList = [
 /*
 Provides a list of three cateredly order-randomized answers.
 */
-// func randomizeAnswers() {
-//     // Shuffles the given group of answers
-//     answerRange.shuffle()
-//     /// Placeholder array to hold three given answers.
-//     var randomAnswers: [String] = ["","",""]
-//     // Scrolls through each empty choice in randomAnswers
-//     for randomAnswer in randomAnswers {
-//     // Pulls out a random answer from answerRange and inserts it into the respective index of the current looparound
-//     randomAnswers[loopScroller] = answerRange.randomElement()!
-//     // Prepares loopScroller for next looparound
-//     loopScroller += 1
-//     }
-//     // Prints out the three answers in a numbered lsit
-//     print (randomAnswers)
-// }
+func randomizeAnswers() {
+    // Shuffles the given group of answers
+    answerRange.shuffled()
+    /// Placeholder array to hold three given answers.
+    var randomAnswers: [String] = ["","",""]
+    // Scrolls through each empty choice in randomAnswers
+    for randomAnswer in randomAnswers {
+        // Pulls out a random answer from answerRange and inserts it into the respective index of the current looparound
+        randomAnswers[loopScroller] = answerRange.randomElement()!
+        // Prepares loopScroller for next looparound
+        loopScroller += 1
+    }
+    // Resets loopScroller for next question
+    loopScroller = 0
+    // Prints out the three answers in a numbered list
+    print (randomAnswers)
+}
 
-///// Holds one of two categories of unedited answers. Varred here with placeholder content to allow function recognition
-// var answerRange = ["1","2","3"]
+/// Holds one of two categories of unedited answers. Varred here with placeholder content to allow function recognition
+var answerRange = ["1","2","3"]
 // Goes through every question in the quiz
-// for questionConst in questionListRandom {
-//     // Converts the question string from a constant to a variable
-//     var questionVar = questionConst
-//     // Randomizes the order from one of two fixed sets of answers (limited down to 3) based on the question provided. Ordered in reverse for efficiency.
-//     if questionVar == questionList[5] || questionVar == questionList[6] || questionVar == questionList[7] {
-//         // Answer Category: Formulae
-//         var answerRange = Array(answerList[5...7])
-//         randomizeAnswers()
-//     } else {
-//         // Answer Category: Triangular Center
-//         var answerRange = Array(answerList[0...4])
-//         randomizeAnswers()
-//     }
-// }
+for questionConst in questionListRandom {
+    // Converts each question string from a constant to a variable
+    var questionVar = questionConst
+    // Randomizes the order from one of two fixed sets of answers (limited down to 3) based on the question provided. Ordered in reverse for efficiency.
+    if questionVar == questionList[5] || questionVar == questionList[6] || questionVar == questionList[7] {
+        // Answer Category: Formulae
+        answerRange = Array(answerList[5...7])
+        randomizeAnswers()
+    } else {
+        // Answer Category: Triangular Center
+        answerRange = Array(answerList[0...4])
+        randomizeAnswers()
+    }
+}
 
-var scoreMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
-print (scoreMultiplier)
+// var scoreMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
+// print (scoreMultiplier)
                 }
         }

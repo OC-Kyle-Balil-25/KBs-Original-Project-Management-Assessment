@@ -5,6 +5,7 @@
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:12swe-2026-swift-playground-12swe-2026-SwiftPlayground}",
+   
             "name": "Debug SwiftPlayground",
             "target": "SwiftPlayground",
             "configuration": "debug",
