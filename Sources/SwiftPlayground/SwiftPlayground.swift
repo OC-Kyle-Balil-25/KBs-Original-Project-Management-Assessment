@@ -5,13 +5,16 @@
         struct SwiftPlayground {
                 static func main() {
 //// General Variables
-
-/// Increases by 1 for every looparound to progress certain variables in said loops
-var loopScroller = 0
+/// Increases by 1 numeric unit for every looparound to progress numeric displays in Question Category Picker for_in_ Loop. Always scrolls eight times.
+var eightScroller = 0
+/// Increases by 1 numeric unit for every looparound to progress letterList to display in Answer Shuffler for_in_ Loop. Always scrolls three times.
+var threeScroller = 0
+/// List of letters in order to list answers.
+var letterList = ["A","B","C"]
 
 var scoreStat = 0
 
-/// Fixed list of questions
+/// Fixed list of questions.
 var questionList = [
     "What is the formula for finding the distance between two points?",
     "What is the formula for finding the gradient between two points?",
@@ -23,10 +26,10 @@ var questionList = [
     "What is the Circumcentre?",
     "What is the Orthocentre?"
 ]
-/// Copy of questionList, but shuffled
+/// Copy of questionList, but shuffled.
 var questionListRandom = questionList.shuffled()
 
-/// Fixed list of answers
+/// Fixed list of answers.
 var answerList = [
     "(x2-x1, y2-y1)",
     "(y2-y1)/(x2-x1)",
@@ -40,41 +43,45 @@ var answerList = [
 ]
 
 /*
-Provides a list of three cateredly order-randomized answers.
+Provides a list of three cateredly shuffled answers.
 */
-func randomizeAnswers() {
-    // Shuffles the given group of answers
-    answerRange.shuffled()
-    /// Placeholder array to hold three given answers.
+func randomizeAnswers(from minIndex: Int, to maxIndex: Int) {
+    // Shuffles the given group of answers.
+    answerRange = Array(answerList[minIndex...maxIndex]).shuffled()
+    /// Placeholder array to hold three random answers.
     var randomAnswers: [String] = ["","",""]
-    // Scrolls through each empty choice in randomAnswers
+    // Prints question.
+    print ("\(eightScroller). \(questionVar)")
+    // Scrolls through each empty choice in randomAnswers.
     for randomAnswer in randomAnswers {
-        // Pulls out a random answer from answerRange and inserts it into the respective index of the current looparound
-        randomAnswers[loopScroller] = answerRange.randomElement()!
-        // Prepares loopScroller for next looparound
-        loopScroller += 1
+        // Pulls out a random answer from answerRange and inserts it into the respective index of the current looparound.
+        randomAnswers[threeScroller] = answerRange[threeScroller]
+        // Prints out the three answers in a lettered list
+        print ("\(letterList[threeScroller]). \(randomAnswers[threeScroller])")
+        // Prepares threeScroller for next looparound.
+        threeScroller += 1
     }
-    // Resets loopScroller for next question
-    loopScroller = 0
-    // Prints out the three answers in a numbered list
-    print (randomAnswers)
+    // Resets threeScroller for next question looparound.
+    threeScroller = 0
 }
 
-/// Holds one of two categories of unedited answers. Varred here with placeholder content to allow function recognition
+/// Holds one of two categories of unedited answers. Varred here with placeholder content to allow function recognition.
 var answerRange = ["1","2","3"]
-// Goes through every question in the quiz
+/// Converts each question string from a constant to a variable. Varred here with placeholder content to allow function recognition.
+var questionVar = "?"
+// Goes through every question in the quiz.
 for questionConst in questionListRandom {
-    // Converts each question string from a constant to a variable
-    var questionVar = questionConst
+    // Prepares eightScroller for printed display in randomizeAnswers.
+    eightScroller += 1
+    // Converts each question string from a constant to a variable.
+    questionVar = questionConst
     // Randomizes the order from one of two fixed sets of answers (limited down to 3) based on the question provided. Ordered in reverse for efficiency.
-    if questionVar == questionList[5] || questionVar == questionList[6] || questionVar == questionList[7] {
-        // Answer Category: Formulae
-        answerRange = Array(answerList[5...7])
-        randomizeAnswers()
-    } else {
+    if questionList[5...7].contains(questionVar) {
         // Answer Category: Triangular Center
-        answerRange = Array(answerList[0...4])
-        randomizeAnswers()
+        randomizeAnswers(from: 5, to: 7)
+    } else {
+        // Answer Category: Formulae
+        randomizeAnswers(from: 0, to: 4)
     }
 }
 
