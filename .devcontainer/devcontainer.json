@@ -1,5 +1,5 @@
 {
-    "image": "swift:6.2-noble",
+    "image": "swift:6.3-noble",
     "customizations": {
         "vscode": {
             "extensions": [
