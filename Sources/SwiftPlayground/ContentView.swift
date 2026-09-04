@@ -63,6 +63,7 @@ HStack(spacing: 2) {
     Button("randomAnswers[0])") {
         points += 1
         answerText = "Correct answer! You now have \(points) points!"
+        Text("Correct answer! You now have \(points) points!")
     }
     
     Button("randomAnswers[1])") {
