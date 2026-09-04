@@ -10,7 +10,7 @@ struct ContentView: View {
 @State private var answerText: String = "Points: 0"
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
+        VStack(alignment: .center, spacing: 1) {
 // Text("--- Interactive SwiftTUI Demo ---")
 
 // // --- SECTION 1: Text Field (Input) ---
