@@ -1,12 +1,12 @@
-// // The Swift Programming Language
-// // https://docs.swift.org/swift-book
+import SwiftTUI
 
-// import Foundation
-// import SwiftTUI
+struct ContentView: View {
+@State private var points: Int = 0
+@State private var answerText: String = "Points: 0"
 
-// @main
-//         struct SwiftPlayground {
-//                 static func main() {
+    var body: some View {
+        VStack(alignment: .center, spacing: 1) {
+
 // //// General Variables
 // /// Increases by 1 numeric unit for every looparound to progress numeric displays in Question Category Picker for_in_ Loop. Always scrolls eight times.
 // var eightScroller = 0
@@ -90,5 +90,26 @@
 
 // // var scoreMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
 // // print (scoreMultiplier)
-//                 }
-//         }
+
+Text("--- eightScroller). questionVar) ---")
+HStack(spacing: 2) {
+    Button("randomAnswers[0])") {
+        points += 1
+        answerText = "Correct answer! You now have \(points) points!"
+    }
+    
+    Button("randomAnswers[1])") {
+        answerText = "Wrong answer! You still have \(points) points!"
+    }
+    
+    Button("randomAnswers[2])") {
+        answerText = "Wrong answer! You still have \(points) points!"
+    }
+}
+
+Text("--- \(answerText) ---")
+        }
+.padding()
+.frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
