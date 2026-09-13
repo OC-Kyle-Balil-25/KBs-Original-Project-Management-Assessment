@@ -1,11 +1,11 @@
 import SwiftTUI
 
-struct ContentView: View {
+struct TripleChoiceQuiz: View {
 @State private var points: Int = 0
 @State private var answerText: String = "Points: 0"
 @State public var questionConst: String = "Question:"
-@State public var randomAnswers: String = "Answer #"
-@State public var threeScroller: String = 0
+@State public var randomAnswers: [String] = ["","",""]
+@State public var threeScroller: Int = 0
 
     var body: some View {
         VStack(alignment: .center, spacing: 1) {
