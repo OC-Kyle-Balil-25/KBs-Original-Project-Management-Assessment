@@ -113,7 +113,7 @@ func nextQuestion() {
     if currentListIndex >= randomIndexOrder.count {
         // Confirms and Displays Quiz Completion.
         currentQuestionDisplay = "All questions answered!"
-        // Displays Final Score.
+        // Displays Final Score.  
         pointDisplay = "Your final score sums to \(pointTotal)/\(randomIndexOrder.count) points!"
     } else {
         /// Picks shuffled index from [randomIndexOrder], according to current knowledgeable content progression of quiz.
