@@ -14,7 +14,7 @@ struct TripleChoiceQuiz: View {
 
 /* Points System */
 /// Total Sum/Product of Points Accumulated/Decumulated.
-@State private var pointTotal: Int = 0
+@State private var pointTotal: Double = 0
 /// Displays and Confirms Answer validity including total number of Points having been affected by button responses, in TERMINAL.
 @State private var pointDisplay: String = "Points: 0"
 
@@ -23,6 +23,10 @@ struct TripleChoiceQuiz: View {
 @State private var currentListIndex: Int = 0
 /// Shuffled List of 8 Indexes to Shuffle Order of Connected Questions and Correct Answers.
 @State private var randomIndexOrder: [Int] = Array(0..<8).shuffled()
+
+/* Multiplier State */
+/// Index Number of Current Question & indirectly, Correct Answer.
+@State private var pointMultiplier: Double = 1
 
 /* Current Display State */
 /// Displays Current Question in TERMINAL.
@@ -34,6 +38,9 @@ struct TripleChoiceQuiz: View {
 
 /* 0-4: Formulae | 5-7: Triangular Centre */
 /// Fixed list of questions.
+// let questionList = [
+//     "1", "2", "3", "4", "5", "6", "7", "8"
+// ]
 let questionList = [
     "What is the formula for finding the distance between two points?",
     "What is the formula for finding the gradient between two points?",
@@ -45,6 +52,9 @@ let questionList = [
     "What is the Orthocentre?"
 ]
 /// Fixed list of answers.
+// let answerList = [
+//     "1", "2", "3", "4", "5", "6", "7", "8"
+// ]
 let answerList = [
     "(x2-x1, y2-y1)",
     "(y2-y1)/(x2-x1)",
@@ -64,17 +74,21 @@ var body: some View {
         if currentAnswerList.count == 3 {
             HStack(spacing: 2) {
                 Button(currentAnswerList[0]) {
-                    pickButton(containing: currentAnswerList[0])
+                    pickAnswer(containing: currentAnswerList[0])
                 }
                 Button(currentAnswerList[1]) {
-                    pickButton(containing: currentAnswerList[1])
+                    pickAnswer(containing: currentAnswerList[1])
                 }
                 Button(currentAnswerList[2]) {
-                    pickButton(containing: currentAnswerList[2])
+                    pickAnswer(containing: currentAnswerList[2])
                 }
             }
         }
         Text("--- \(pointDisplay) ---")
+        
+        Button("\(pointMultiplier)x") {
+            multiplyPoints()
+        }
     }
     // Repositions Button Contents further away from Button Edges.
     .padding()
@@ -91,7 +105,7 @@ var body: some View {
 : - Parametres:
 :   - currentAnswerSingle: Each Individual Answer from [currentAnswerList]
 */
-func pickButton(containing currentAnswerSingle: String) {
+func pickAnswer(containing currentAnswerSingle: String) {
     if currentAnswerSingle == correctAnswer {
         // Correct Answer adds a point.
         pointTotal += 1
@@ -103,6 +117,14 @@ func pickButton(containing currentAnswerSingle: String) {
     }
     currentListIndex += 1
     nextQuestion()
+}
+
+/*
+: Multiplies pointTotal by a random amount. Both decreasing and increasing multipliers.
+*/
+func multiplyPoints() {
+    pointMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
+    pointTotal *= pointMultiplier
 }
 
 /*
@@ -126,7 +148,7 @@ func nextQuestion() {
         /// Container for Three Answers before Shuffling.
         var possibleAnswerList: [String] = ["Incorrect","Answers"]
 
-        if randomListIndex >= 5 && randomListIndex <= 7 {
+        if randomListIndex >= 5 && randomListIndex <= 7  {
             /* Answer Category: Triangular Centre */
             // Instant 3 Answers with only 1 always Correct and no Duplicates.
             possibleAnswerList = Array(answerList[5...7])
