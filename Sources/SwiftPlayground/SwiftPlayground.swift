@@ -17,6 +17,8 @@ struct TripleChoiceQuiz: View {
 @State private var pluralS: String = ""
 /// "Be" Past-Tense to accurately follow "Be" Past-Tense pluralism when needed in TERMINAL.
 @State private var pluralWasWere: String = "was"
+/// Temporary debugging plural to display in TERMINAL.
+@State private var testPlural: String = ""
 
 /* Points System */
 /// Total Sum/Product of Points Accumulated/Decumulated.
@@ -97,6 +99,8 @@ var body: some View {
         Button("\(pointMultiplier)x") {
             multiplyPoints()
         }
+
+        Text(testPlural)
     }
     // Repositions Button Contents further away from Button Edges.
     .padding()
@@ -118,11 +122,15 @@ func pickAnswer(containing currentAnswerSingle: String) {
         // Correct Answer adds a point.
         pointTotal += 1
         correctTotal += 1
+        // Checks if pointTotal is numerically either singular or plural after Correct Addition to adapt pluralS.
+        adaptPlural(using: pointTotal)
         // Confirms Correctness of Answer with changed Point Total.
-        pointDisplay = "Correct answer! You now have \(pointTotal) points!"
+        pointDisplay = "Correct answer! You now have \(pointTotal) point\(pluralS)!"
     } else {
+        // Checks if pointTotal is numerically either singular or plural after Wrong Null to adapt pluralS.
+        adaptPlural(using: pointTotal)
         // Confirms Wrongness of Answer with unchanged Point Total.
-        pointDisplay = "Wrong answer! You still have \(pointTotal) points!"
+        pointDisplay = "Wrong answer! You still have \(pointTotal) point\(pluralS)!"
     }
     currentListIndex += 1
     nextQuestion()
@@ -133,11 +141,14 @@ func pickAnswer(containing currentAnswerSingle: String) {
 */
 func multiplyPoints() {
     // Randomizes multiplier from a range of 0.25-3.00, in increments of 0.25.
-    pointMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
+    // pointMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
+    pointMultiplier = 0.25
     // Multiplies current pointTotal.
     pointTotal *= pointMultiplier
+    // Checks if pointTotal is numerically either singular or plural after Multiplier Effect to adapt pluralS.
+    adaptPlural(using: pointTotal)
     // Updates Point Display to reflect reason of change.
-    pointDisplay = ("You now have \(pointTotal) points!")
+    pointDisplay = ("You now have \(pointTotal) point\(pluralS)!")
 }
 
 /*
@@ -146,15 +157,15 @@ func multiplyPoints() {
 func nextQuestion() {
     // Checks if all Questions have been Answered.
     if currentListIndex >= randomIndexOrder.count {
-        // Confirms and Displays Quiz Completion. Fixed number of Total Questions = checkPlural() unneeded.
+        // Confirms and Displays Quiz Completion. Fixed number of Total Questions = adaptPlural() unneeded.
         currentQuestionDisplay = "All questions answered!"
-        // Displays Final Score. Fixed number of Total Questions = checkPlural() unneeded for "questions".
-        pointDisplay = "Your final score sums to \(pointTotal)/\(randomIndexOrder.count) point\(checkPlural(of: pointTotal, toAdapt: pluralS))! \(correctTotal)/\(randomIndexOrder.count) questions \(checkPlural(of: correctTotal, toAdapt: pluralWasWere)) answered correctly!"
+        // Displays Final Score. Fixed number of Total Questions = adaptPlural() unneeded for “point/->points<-”, "question/->questions<-", and “was/->were<-”.
+        pointDisplay = "Your final score sums to \(pointTotal)/\(randomIndexOrder.count) points! \(correctTotal)/\(randomIndexOrder.count) questions were answered correctly!"
     } else {
         /// Picks shuffled index from [randomIndexOrder], according to current knowledgeable content progression of quiz.
         var randomListIndex = randomIndexOrder[currentListIndex]
         // Picks Next Question using randomListIndex, for Next Question Display.
-        currentQuestionDisplay = questionList[randomListIndex]
+        currentQuestionDisplay = "[\(currentListIndex)/\(randomIndexOrder.count)] \(questionList[randomListIndex])"
         // Sets up Correct Answer Connected to Next Question.
         correctAnswer = answerList[randomListIndex]
 
@@ -200,7 +211,8 @@ func nextQuestion() {
 :   - numericUnit: Number being tested for pluralism.
 :   - usedPlural: Plural Fix used as a result of numericUnit and specific word affected.
 */
-func checkPlural(of numericUnit: Double, toAdapt usedPlural: String) {
+func adaptPlural(using numericUnit: Double) {
+    // Tests selected number for pluralism.
     if numericUnit == 1 {
         // Words should grammatically be singular.
         pluralS = ""
@@ -210,7 +222,6 @@ func checkPlural(of numericUnit: Double, toAdapt usedPlural: String) {
         pluralS = "s"
         pluralWasWere = "were"
     }
-    print (usedPlural)
 }
-    
+
 }
