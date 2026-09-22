@@ -12,7 +12,7 @@ struct SwiftPlayground: App {
 
 struct TripleChoiceQuiz: View {
 
-/* General Variables */
+/* Plural Variables */
 /// Single Letter to accurately follow single-letter pluralism when needed in TERMINAL.
 @State private var pluralS: String = ""
 /// "Be" Past-Tense to accurately follow "Be" Past-Tense pluralism when needed in TERMINAL.
@@ -37,6 +37,8 @@ struct TripleChoiceQuiz: View {
 /* Multiplier State */
 // Randomized multiplier to affect pointTotal. Starts displayed as 1 to show that pointTotal has not yet been significantly affected in TERMINAL.
 @State private var pointMultiplier: Double = 1
+// Ensures multiplyPoints() can only be used once per Question on average.
+@State private var multiplierAttempts: Double = 0
 
 /* Current Display State */
 /// Displays Current Question in TERMINAL.
@@ -76,31 +78,31 @@ let answerList = [
 //     "Tri-intersection point of a triangle based on lines from perpendicular bisectors to directly opposite vertices"
 // ]
 
-/// Terminal Display
+/// TERMINAL Display.
 var body: some View {
     VStack(alignment: .center, spacing: 1) {
+        // Displays Quiz Progress.
         Text("--- \(currentQuestionDisplay) ---")
         // Three Buttons containing one Answer each.
         if currentAnswerList.count == 3 {
             HStack(spacing: 2) {
-                Button(currentAnswerList[0]) {
-                    pickAnswer(containing: currentAnswerList[0])
-                }
-                Button(currentAnswerList[1]) {
-                    pickAnswer(containing: currentAnswerList[1])
-                }
-                Button(currentAnswerList[2]) {
-                    pickAnswer(containing: currentAnswerList[2])
+                for currentAnswer in currentAnswerList {
+                    Button(currentAnswer) {
+                        pickAnswer(containing: currentAnswer)
+                    }
                 }
             }
         }
+        // Displays Actively Changing Total of Points with Reason.
         Text("--- \(pointDisplay) ---")
         
+        // Manages Multiplier Bonus.
         Button("\(pointMultiplier)x") {
             multiplyPoints()
         }
-
-        Text(testPlural)
+        
+        // Displays attempts left to use the Random Multiplier.
+        Text("--- You have \(multiplierAttempts) Multiplier\(pluralS)! Answer more questions to earn more Multipliers! ---")
     }
     // Repositions Button Contents further away from Button Edges.
     .padding()
@@ -122,33 +124,44 @@ func pickAnswer(containing currentAnswerSingle: String) {
         // Correct Answer adds a point.
         pointTotal += 1
         correctTotal += 1
-        // Checks if pointTotal is numerically either singular or plural after Correct Addition to adapt pluralS.
-        adaptPlural(using: pointTotal)
         // Confirms Correctness of Answer with changed Point Total.
-        pointDisplay = "Correct answer! You now have \(pointTotal) point\(pluralS)!"
+        updatePoints(suffixing: "Correct answer! You now")
     } else {
-        // Checks if pointTotal is numerically either singular or plural after Wrong Null to adapt pluralS.
-        adaptPlural(using: pointTotal)
         // Confirms Wrongness of Answer with unchanged Point Total.
-        pointDisplay = "Wrong answer! You still have \(pointTotal) point\(pluralS)!"
+        updatePoints(suffixing: "Wrong answer! you still")
     }
     currentListIndex += 1
     nextQuestion()
 }
 
 /*
-: Multiplies pointTotal by a random amount. Both decreasing and increasing multipliers.
+: Multiplies Points by a random amount. Both decreasing and increasing Multipliers.
 */
 func multiplyPoints() {
-    // Randomizes multiplier from a range of 0.25-3.00, in increments of 0.25.
-    // pointMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
-    pointMultiplier = 0.25
-    // Multiplies current pointTotal.
-    pointTotal *= pointMultiplier
-    // Checks if pointTotal is numerically either singular or plural after Multiplier Effect to adapt pluralS.
+    if multiplierAttempts != 0 {
+        // Randomizes multiplier from a range of 0.25-3.00, in increments of 0.25.
+        pointMultiplier = Array(stride(from: 0.25, through: 3, by: 0.25)).randomElement()!
+        // Multiplies current pointTotal.
+        pointTotal *= pointMultiplier
+        // Updates Point Display to reflect Multiplier change.
+        updatePoints(suffixing: "You now")
+        multiplierAttempts -= 1
+    }
+    adaptPlural(using: multiplierAttempts)
+}
+
+/*
+: Updates Points with a Reason Statement.
+: - Parametres:
+:   - reasonStatement: Reason prefixing how pointTotal was actively changed.
+*/
+func updatePoints(suffixing reasonStatement: String) {
+    // Checks if pointTotal is numerically either singular or plural after Effect contextualized by reasonStatement.
     adaptPlural(using: pointTotal)
-    // Updates Point Display to reflect reason of change.
-    pointDisplay = ("You now have \(pointTotal) point\(pluralS)!")
+    /// Private copy of pluralS specifically for "point/points".
+    var pointPlural = pluralS
+    // Confirms reason of changed pointTotal all displayed in TERMINAL.
+    pointDisplay = "\(reasonStatement) have \(pointTotal) point\(pointPlural)!"
 }
 
 /*
@@ -158,7 +171,7 @@ func nextQuestion() {
     // Checks if all Questions have been Answered.
     if currentListIndex >= randomIndexOrder.count {
         // Confirms and Displays Quiz Completion. Fixed number of Total Questions = adaptPlural() unneeded.
-        currentQuestionDisplay = "All questions answered!"
+        currentQuestionDisplay = "[\(currentListIndex)/\(randomIndexOrder.count)] All questions answered!"
         // Displays Final Score. Fixed number of Total Questions = adaptPlural() unneeded for “point/->points<-”, "question/->questions<-", and “was/->were<-”.
         pointDisplay = "Your final score sums to \(pointTotal)/\(randomIndexOrder.count) points! \(correctTotal)/\(randomIndexOrder.count) questions were answered correctly!"
     } else {
@@ -202,6 +215,9 @@ func nextQuestion() {
         }
         // Shuffles Complete Answer List for Maximum Non-Cheesability, for Next Question.
         currentAnswerList = possibleAnswerList.shuffled()
+
+        // Adds one Multiplier per Question Answered.
+        multiplierAttempts += 1
     }
 }
 
