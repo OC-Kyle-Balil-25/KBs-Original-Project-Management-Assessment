@@ -19,6 +19,8 @@ struct TripleChoiceQuiz: View {
 @State private var pluralWasWere: String = "was"
 /// Temporary debugging plural to display in TERMINAL.
 @State private var testPlural: String = ""
+/// Private copy of pluralS specifically for "multiplier/multipliers".
+var multiplierPlural = ""
 
 /* Points System */
 /// Total Sum/Product of Points Accumulated/Decumulated.
@@ -39,6 +41,8 @@ struct TripleChoiceQuiz: View {
 @State private var pointMultiplier: Double = 1
 // Ensures multiplyPoints() can only be used once per Question on average.
 @State private var multiplierAttempts: Double = 0
+/// Actively displays total amount of Multipliers in TERMINAL.
+@State private var multiplierDisplay: String = "You have 0 Multipliers! Answer more questions to earn more Multipliers!"
 
 /* Current Display State */
 /// Displays Current Question in TERMINAL.
@@ -102,7 +106,7 @@ var body: some View {
         }
         
         // Displays attempts left to use the Random Multiplier.
-        Text("--- You have \(multiplierAttempts) Multiplier\(pluralS)! Answer more questions to earn more Multipliers! ---")
+        Text("--- \(multiplierDisplay) ---")
     }
     // Repositions Button Contents further away from Button Edges.
     .padding()
@@ -147,7 +151,8 @@ func multiplyPoints() {
         updatePoints(suffixing: "You now")
         multiplierAttempts -= 1
     }
-    adaptPlural(using: multiplierAttempts)
+    // Adapts multiplierDisplay based on Subtraction of a Multiplier.
+    updateMultipliers()
 }
 
 /*
@@ -158,10 +163,22 @@ func multiplyPoints() {
 func updatePoints(suffixing reasonStatement: String) {
     // Checks if pointTotal is numerically either singular or plural after Effect contextualized by reasonStatement.
     adaptPlural(using: pointTotal)
-    /// Private copy of pluralS specifically for "point/points".
+    /// Privately copies pluralS specifically to adapt "point/points".
     var pointPlural = pluralS
     // Confirms reason of changed pointTotal all displayed in TERMINAL.
     pointDisplay = "\(reasonStatement) have \(pointTotal) point\(pointPlural)!"
+}
+
+/*
+: Updates Multiplier Attempt Total.
+*/
+func updateMultipliers() {
+    /// Adapts pluralS based on Addition/Subtraction of a Multiplier.
+    adaptPlural(using: multiplierAttempts)
+    /// Privately copies pluralS specifically to adapt "multiplier/multipliers" after Addition/Subtraction of a Multiplier.
+    var multiplierPlural = pluralS
+    // Updates multiplierDisplay to reflect Multiplier Subtraction.
+    multiplierDisplay = "You have \(multiplierAttempts) Multiplier\(multiplierPlural)! Answer more questions to earn more Multipliers!"
 }
 
 /*
@@ -218,6 +235,9 @@ func nextQuestion() {
 
         // Adds one Multiplier per Question Answered.
         multiplierAttempts += 1
+
+        // Adapts multiplierDisplay based on Subtraction of a Multiplier.
+        updateMultipliers()
     }
 }
 
