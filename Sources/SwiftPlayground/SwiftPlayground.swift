@@ -23,9 +23,9 @@ struct TripleChoiceQuiz: View {
 /* Placeholder Variables */
 /// Total # of Answer Buttons.
 @State private var allAnswerButtons: Int = 3
-/// Increases certain variables by 1 for every Correct Answer.
+/// Increases Certain Variables by 1 for every Correct Answer.
 @State private var correctPoint: Int = 1
-/// Increases certain variables by 1 for every Question Answered.
+/// Increases Certain Variables by 1 for every Question Answered.
 @State private var questionProgressor: Int = 1
 /// Null # of Multipliers.
 @State private var noMultipliers: Int = 0
@@ -39,6 +39,8 @@ struct TripleChoiceQuiz: View {
 @State private var identicalMultiplier: Double = 1.0
 /// Use of a Multiplier.
 @State private var multiplierUse: Int = 1
+/// Offsets currentListIndex Independently to indicate the Current Question more clearly.
+@State private var offsettorToCurrent: Int = 1
 /// Minimum Formulae Question.
 @State private var minQuestionForm: Int = 0
 /// Maximum Formulae Question.
@@ -71,6 +73,8 @@ struct TripleChoiceQuiz: View {
 @State private var currentListIndex: Int = 0
 /// Shuffled List of 8 Indexes to Shuffle Order of Connected Questions and Correct Answers.
 @State private var randomIndexOrder: [Int] = Array(0..<8).shuffled()
+/// Checks for End of Quiz.
+@State private var quizEnded = false
 
 /* Multiplier State */
 // Randomized multiplier to affect the Point Total. Starts displayed as 1 to show that the Point Total has not yet been significantly affected in TERMINAL.
@@ -89,33 +93,35 @@ struct TripleChoiceQuiz: View {
 @State private var correctAnswer: String = ""
 
 /* 0-4: Formulae | 5-7: Triangular Centre */
-/// Fixed list of questions.
+// /// Fixed list of questions.
 // let questionList = [
-//     "1", "2", "3", "4", "5", "6", "7", "8"
+//     "What is the formula for finding the distance between two points?",
+//     "What is the formula for finding the gradient between two points?",
+//     "What is the formula for finding the midpoint between two points?",
+//     "What is the equation of a linear line?",
+//     "How do you find the negative reciprocal of a gradient?",
+//     "What is the Centroid?",
+//     "What is the Circumcentre?",
+//     "What is the Orthocentre?"
 // ]
+// /// Fixed list of answers.
+// let answerList = [
+//     "(x2-x1, y2-y1)",
+//     "(y2-y1)/(x2-x1)",
+//     "(x1+x2, y1+y2)/2",
+//     "y=mx+c",
+//     "a/b -> -(b/a)",
+//     "Tri-intersection point of a triangle based on lines from midpoints to directly opposite vertices",
+//     "Tri-intersection point of a triangle based on lines from perpendicular bisector midpoints",
+//     "Tri-intersection point of a triangle based on lines from perpendicular bisectors to directly opposite vertices"
+// ]
+/// Fixed list of questions.
 let questionList = [
-    "What is the formula for finding the distance between two points?",
-    "What is the formula for finding the gradient between two points?",
-    "What is the formula for finding the midpoint between two points?",
-    "What is the equation of a linear line?",
-    "How do you find the negative reciprocal of a gradient?",
-    "What is the Centroid?",
-    "What is the Circumcentre?",
-    "What is the Orthocentre?"
+    "1", "2", "3", "4", "5", "6", "7", "8"
 ]
 /// Fixed list of answers.
-// let answerList = [
-//     "1", "2", "3", "4", "5", "6", "7", "8"
-// ]
 let answerList = [
-    "(x2-x1, y2-y1)",
-    "(y2-y1)/(x2-x1)",
-    "(x1+x2, y1+y2)/2",
-    "y=mx+c",
-    "(a/b -> -a/b or a/-b)",
-    "Tri-intersection point of a triangle based on lines from midpoints to directly opposite vertices",
-    "Tri-intersection point of a triangle based on lines from perpendicular bisector midpoints",
-    "Tri-intersection point of a triangle based on lines from perpendicular bisectors to directly opposite vertices"
+    "1", "2", "3", "4", "5", "6", "7", "8"
 ]
 
 /// TERMINAL Display.
@@ -232,17 +238,29 @@ func updateMultipliers() {
 : Sets up Next Question, or displays Summary if Quiz has ended.
 */
 func nextQuestion() {
+    // Stops Addition of Multipliers once Quiz has Ended.
+    if quizEnded == false {
+        // Introduces multiplierDisplay on Startup and later adapts based on Subtraction of a Multiplier.
+        updateMultipliers()
+        // Adds one Multiplier per Question Answered.
+        multiplierAttempts += questionProgressor
+    }
+
     // Checks if all Questions have been Answered.
     if currentListIndex >= randomIndexOrder.count {
-        // Confirms and Displays Quiz Completion. Fixed number of Total Questions = adaptPlural() unneeded.
-        currentQuestionDisplay = "[\(currentListIndex)/\(randomIndexOrder.count)] All questions answered!"
-        // Displays Final Score. Fixed number of Total Questions = adaptPlural() unneeded for “point/->points<-”, "question/->questions<-", and “was/->were<-”.
-        pointDisplay = "Your final score sums to \(pointTotal)/\(randomIndexOrder.count) points! \(correctTotal)/\(randomIndexOrder.count) questions were answered correctly!"
+        // Confirms and Displays Quiz Completion. Fixed number of Total Questions = adaptPlural() unneeded for "question/->questions<-" and “was/->were<-”.
+        currentQuestionDisplay = "All questions answered! \(correctTotal)/\(randomIndexOrder.count) questions were answered correctly!"
+        // Credits Creator while also disabling Progressible Question-Answer Connectivity.
+        currentAnswerList = ["Made", "By", "Kabs!"]
+        // Displays Final Score. Fixed number of Total Questions = adaptPlural() unneeded for “point/->points<-”.
+        pointDisplay = "Your final score sums to \(pointTotal)/\(randomIndexOrder.count) points!"
+        // Confirms that Quiz has Ended.
+        quizEnded = true
     } else {
         /// Picks shuffled index from [randomIndexOrder], according to current knowledgeable content progression of quiz.
         var randomListIndex = randomIndexOrder[currentListIndex]
         // Picks Next Question using randomListIndex, for Next Question Display.
-        currentQuestionDisplay = "[\(currentListIndex)/\(randomIndexOrder.count)] \(questionList[randomListIndex])"
+        currentQuestionDisplay = "[\(correctTotal)/\(randomIndexOrder.count)] \(currentListIndex+offsettorToCurrent). \(questionList[randomListIndex])"
         // Sets up Correct Answer Connected to Next Question.
         correctAnswer = answerList[randomListIndex]
 
@@ -257,34 +275,39 @@ func nextQuestion() {
             /* Answer Category: Formulae */
             /// Container for more than Three Answers (Formulae Answer Category), to be cut down.
             var otherAnswerList = Array(answerList[minQuestionForm...maxQuestionForm])
-            // Removes Correct Answer Connected to Next Question.
-            otherAnswerList.removeAll {
-                $0 == correctAnswer
+
+            /// Increases Scroller Variables by 1 for every Element in a List.
+            var listScroller: Int = 1
+            /// Used to scroll through 2-Element Arrays.
+            var twoScroller = scrollerReset
+            /// Used to scroll through 5-Element Arrays.
+            var fiveScroller = scrollerReset
+
+            // Scrolls through Formulae Answer Category to...
+            for otherAnswer in otherAnswerList {
+                // ...Search for the Correct Answer according to Current Question to...
+                if otherAnswer == correctAnswer {
+                    // ...Remove Correct Answer to leave all Incorrect Answers left.
+                    otherAnswerList.remove(at: fiveScroller)
+                }
+                // Prepares Loop to Search Next otherAnswers.
+                fiveScroller += listScroller
             }
             // Shuffles List of all Incorrect (Formulae) Answers.
             otherAnswerList.shuffle()
 
-            /// Used to scroll through 2-Element Arrays.
-            var twoScroller = scrollerReset
-
             /// Sets up 3-Answer (Formulae) List for Next Question.
             for possibleAnswerSingle in possibleAnswerList {
-                // Adds 2 Incorrect Answers First
+                // Adds 2 Incorrect Answers First.
                 possibleAnswerList[twoScroller] = otherAnswerList[twoScroller]
                 // Prepares Loop to Collect Second Incorrect Answer.
-                twoScroller += questionProgressor
+                twoScroller += listScroller
             }
             // Adds 1 Correct Answer Last.
             possibleAnswerList.append(correctAnswer)
         }
         // Shuffles Complete Answer List for Maximum Non-Cheesability, for Next Question.
         currentAnswerList = possibleAnswerList.shuffled()
-
-        // Adds one Multiplier per Question Answered.
-        multiplierAttempts += questionProgressor
-
-        // Adapts multiplierDisplay based on Subtraction of a Multiplier.
-        updateMultipliers()
     }
 }
 
