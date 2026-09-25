@@ -35,6 +35,8 @@ struct TripleChoiceQuiz: View {
 @State private var maxMultiplier: Double = 3.00
 /// Size Increments of Multiplier Range.
 @State private var multiplierIncrement: Double = 0.25
+/// Value of Multiplier that keeps Current # of Points Identical.
+@State private var identicalMultiplier: Double = 1.0
 /// Use of a Multiplier.
 @State private var multiplierUse: Int = 1
 /// Minimum Formulae Question.
@@ -88,33 +90,33 @@ struct TripleChoiceQuiz: View {
 
 /* 0-4: Formulae | 5-7: Triangular Centre */
 /// Fixed list of questions.
-let questionList = [
-    "1", "2", "3", "4", "5", "6", "7", "8"
-]
 // let questionList = [
-//     "What is the formula for finding the distance between two points?",
-//     "What is the formula for finding the gradient between two points?",
-//     "What is the formula for finding the midpoint between two points?",
-//     "What is the equation of a linear line?",
-//     "How do you find the negative reciprocal of a gradient?",
-//     "What is the Centroid?",
-//     "What is the Circumcentre?",
-//     "What is the Orthocentre?"
+//     "1", "2", "3", "4", "5", "6", "7", "8"
 // ]
-// / Fixed list of answers.
-let answerList = [
-    "1", "2", "3", "4", "5", "6", "7", "8"
+let questionList = [
+    "What is the formula for finding the distance between two points?",
+    "What is the formula for finding the gradient between two points?",
+    "What is the formula for finding the midpoint between two points?",
+    "What is the equation of a linear line?",
+    "How do you find the negative reciprocal of a gradient?",
+    "What is the Centroid?",
+    "What is the Circumcentre?",
+    "What is the Orthocentre?"
 ]
+/// Fixed list of answers.
 // let answerList = [
-//     "(x2-x1, y2-y1)",
-//     "(y2-y1)/(x2-x1)",
-//     "(x1+x2, y1+y2)/2",
-//     "y=mx+c",
-//     "(a/b -> -a/b or a/-b)",
-//     "Tri-intersection point of a triangle based on lines from midpoints to directly opposite vertices",
-//     "Tri-intersection point of a triangle based on lines from perpendicular bisector midpoints",
-//     "Tri-intersection point of a triangle based on lines from perpendicular bisectors to directly opposite vertices"
+//     "1", "2", "3", "4", "5", "6", "7", "8"
 // ]
+let answerList = [
+    "(x2-x1, y2-y1)",
+    "(y2-y1)/(x2-x1)",
+    "(x1+x2, y1+y2)/2",
+    "y=mx+c",
+    "(a/b -> -a/b or a/-b)",
+    "Tri-intersection point of a triangle based on lines from midpoints to directly opposite vertices",
+    "Tri-intersection point of a triangle based on lines from perpendicular bisector midpoints",
+    "Tri-intersection point of a triangle based on lines from perpendicular bisectors to directly opposite vertices"
+]
 
 /// TERMINAL Display.
 var body: some View {
@@ -183,8 +185,13 @@ func multiplyPoints() {
         pointMultiplier = Array(stride(from: minMultiplier, through: maxMultiplier, by: multiplierIncrement)).randomElement()!
         // Privately copies pointTotal specifically for effective compatibility with pointMultiplier.
         pointTotal *= pointMultiplier
-        // Updates Point Display to reflect Multiplier change.
-        updatePoints(suffixing: "You now")
+        if pointMultiplier == identicalMultiplier {
+            // Updates Point Display to reflect ineffective Multiplier.
+            updatePoints(suffixing: "You still")
+        } else {
+            // Updates Point Display to reflect effective Multiplier.
+            updatePoints(suffixing: "You now")
+        }
         // Subtracts Multiplier after use.
         multiplierAttempts -= multiplierUse
     }
