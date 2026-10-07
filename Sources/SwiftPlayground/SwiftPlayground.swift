@@ -79,8 +79,8 @@ struct TripleChoiceQuiz: View {
 /* Multiplier State */
 // Randomized multiplier to affect the Point Total. Starts displayed as 1 to show that the Point Total has not yet been significantly affected in TERMINAL.
 @State private var pointMultiplier: Double = 1.0
-// Ensures multiplyPoints() can only be used once per Question on average.
-@State private var multiplierAttempts: Int = 0
+// Ensures multiplyPoints() can only be used once per Question on average. Starts at -1 to then be offset to 0 by nextQuestion() for Startup TERMINAL Display.
+@State private var multiplierAttempts: Int = -1
 /// Actively displays total amount of Multipliers in TERMINAL.
 @State private var multiplierDisplay: String = "You have 0 Multipliers! Answer more questions to earn more Multipliers!"
 
@@ -240,10 +240,10 @@ func updateMultipliers() {
 func nextQuestion() {
     // Stops Addition of Multipliers once Quiz has Ended.
     if quizEnded == false {
-        // Introduces multiplierDisplay on Startup and later adapts based on Subtraction of a Multiplier.
-        updateMultipliers()
         // Adds one Multiplier per Question Answered.
         multiplierAttempts += questionProgressor
+        // Introduces multiplierDisplay on Startup and later adapts based on Subtraction of a Multiplier.
+        updateMultipliers()
     }
 
     // Checks if all Questions have been Answered.
